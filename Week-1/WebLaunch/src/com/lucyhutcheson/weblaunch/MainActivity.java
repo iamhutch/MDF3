@@ -10,6 +10,7 @@
  */
 package com.lucyhutcheson.weblaunch;
 
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -21,11 +22,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class MainActivity extends Activity {
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// GET TEXT AND INITALIZE DATA
+		final EditText editURI = (EditText) findViewById(R.id.urlField);
+		editURI.setText("http://www.umhb.edu");
 
 		// VIEW WEBSITE BUTTON AND HANDLER FOR IMPLICIT INTENT
 		Button webButton = (Button) findViewById(R.id.webButton);
@@ -33,16 +38,15 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				EditText editURI = (EditText) findViewById(R.id.urlField);
 				Uri intentUri = Uri.parse(editURI.getText().toString());
-				
+
 				// SETUP IMPLICIT INTENT
 				Intent webIntent = new Intent(Intent.ACTION_VIEW, intentUri);
 
 				String title = "View this website with";
 				// Create and start the chooser
 				Intent chooser = Intent.createChooser(webIntent, title);
-				startActivity(chooser);				
+				startActivity(chooser);
 
 			}
 		});
