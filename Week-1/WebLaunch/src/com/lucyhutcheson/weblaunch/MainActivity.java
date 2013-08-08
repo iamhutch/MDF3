@@ -35,17 +35,14 @@ public class MainActivity extends Activity {
 
 				EditText editURI = (EditText) findViewById(R.id.urlField);
 				Uri intentUri = Uri.parse(editURI.getText().toString());
-
+				
 				// SETUP IMPLICIT INTENT
-				Intent webIntent = new Intent();
-				webIntent.setAction(Intent.ACTION_VIEW);
-				webIntent.setData(intentUri);
-				// startActivity(webIntent);
+				Intent webIntent = new Intent(Intent.ACTION_VIEW, intentUri);
 
 				String title = "View this website with";
 				// Create and start the chooser
 				Intent chooser = Intent.createChooser(webIntent, title);
-				startActivity(chooser);
+				startActivity(chooser);				
 
 			}
 		});
