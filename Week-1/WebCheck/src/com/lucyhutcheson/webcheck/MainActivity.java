@@ -44,14 +44,16 @@ public class MainActivity extends Activity {
 	EditText urlField;
 	WebView webview;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.i("WEBCHECK", "STARTING MAIN ACTIVITY");
-		
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -63,14 +65,14 @@ public class MainActivity extends Activity {
 
 		// CHECK IF WE HAVE ANY URLS TO DISPLAY
 		if (dataString != null) {
-			
+
 			webview = (WebView) findViewById(R.id.myWebView);
 
-			// DISMISS THE KEYBOARD SO WE CAN SEE 
+			// DISMISS THE KEYBOARD SO WE CAN SEE
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(
-					((EditText) findViewById(R.id.urlField))
-							.getWindowToken(), 0);
+					((EditText) findViewById(R.id.urlField)).getWindowToken(),
+					0);
 
 			// SETUP OUR URL
 			try {
@@ -81,49 +83,49 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 				Log.e("ERROR", "ERROR TRYING");
 			}
-			
+
 			// LOAD UP OUR WEBSITE
 			webview.getSettings().setJavaScriptEnabled(true);
 			webview.loadUrl(url.toString() + "/");
 
 		}
 		// OTHERWISE, LET'S SETUP A UI FOR THE USER
-		else {
 
-			webview = (WebView) findViewById(R.id.myWebView);
-			urlField = (EditText) findViewById(R.id.urlField);
+		webview = (WebView) findViewById(R.id.myWebView);
+		urlField = (EditText) findViewById(R.id.urlField);
 
-			// GO BUTTON AND HANDLER
-			Button goBtn = (Button) findViewById(R.id.goBtn);
-			goBtn.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					webview = (WebView) findViewById(R.id.myWebView);
-					// DISMISS THE KEYBOARD SO WE CAN SEE 
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(
-							((EditText) findViewById(R.id.urlField))
-									.getWindowToken(), 0);
-					// SETUP OUR URL
-					try {
-						url = new URL(urlField.getText().toString());
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-						Log.e("ERROR", "ERROR TRYING");
-					}
-
-					// LOAD UP OUR WEBSITE
-					webview.getSettings().setJavaScriptEnabled(true);
-					webview.loadUrl(url.toString() + "/");
+		// GO BUTTON AND HANDLER
+		Button goBtn = (Button) findViewById(R.id.goBtn);
+		goBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				webview = (WebView) findViewById(R.id.myWebView);
+				// DISMISS THE KEYBOARD SO WE CAN SEE
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(
+						((EditText) findViewById(R.id.urlField))
+								.getWindowToken(), 0);
+				// SETUP OUR URL
+				try {
+					url = new URL(urlField.getText().toString());
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+					Log.e("ERROR", "ERROR TRYING");
 				}
-			});
-		}
+
+				// LOAD UP OUR WEBSITE
+				webview.getSettings().setJavaScriptEnabled(true);
+				webview.loadUrl(url.toString() + "/");
+			}
+		});
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
 	@Override
