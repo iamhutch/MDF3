@@ -42,6 +42,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -72,9 +73,9 @@ public class MainActivity extends Activity {
 
 		public void handleMessage(Message mymessage) {
 
-	        if (mymessage.arg1 == RESULT_OK	&& mymessage.obj != null) {
+			Log.i("WEATHER CHECK APP", "HANDLER STARTED");
 
-		        
+			if (mymessage.arg1 == RESULT_OK	&& mymessage.obj != null) {
 		        Log.i("RESPONSE", mymessage.obj.toString());
 				JSONObject json = null;
 				try {
@@ -83,16 +84,44 @@ public class MainActivity extends Activity {
 					e.printStackTrace();
 				}
 				Log.i("UPDATE WITH JSON", json.toString());
-				//updateData(json);
+				updateData(json);
+				
 			} else if (mymessage.arg1 == RESULT_CANCELED && mymessage.obj != null){
 				Toast.makeText(MainActivity.this,mymessage.obj.toString(), Toast.LENGTH_LONG).show();
 
 			} else {
 				Toast.makeText(MainActivity.this,"Download failed.", Toast.LENGTH_LONG).show();
 			}
+			
 		}
 
 	};
+	
+	/**
+	 * Updates all textviews with received JSON data.
+	 * 
+	 * @param data
+	 *            the data
+	 */
+	public void updateData(JSONObject data) {
+		Log.i("UPDATE DATA", data.toString());
+		/*try {
+			((TextView) findViewById(R.id._name)).setText(data
+					.getString("title"));
+			((TextView) findViewById(R.id._rating)).setText(data.getJSONObject(
+					"ratings").getString("critics_score"));
+			((TextView) findViewById(R.id._year)).setText(data
+					.getString("year"));
+			((TextView) findViewById(R.id._mpaa)).setText(data
+					.getString("mpaa_rating"));
+			((TextView) findViewById(R.id._synopsis)).setText(data
+					.getString("critics_consensus"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+			Log.e("JSON ERROR", e.toString());
+		}*/
+	}
+
 	
 	/**
 	 * Gets the album name for this application.
@@ -270,7 +299,8 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		Log.i("WEATHER CHECK APP", "MAIN ACTIVITY STARTED");
 		_ImageView = (ImageView) findViewById(R.id._imageView);
 		_ImageBitmap = null;
 
@@ -284,6 +314,7 @@ public class MainActivity extends Activity {
 			_AlbumStorageDirFactory = new BaseAlbumDirFactory();
 		}
 		
+		Log.i("WEATHER CHECK APP", "ABOUT TO START GPS");
 		gps = new GPSTracker(MainActivity.this);
 		if (gps.canGetLocation()) {
 			latitude = gps.getLatitude();
@@ -292,11 +323,13 @@ public class MainActivity extends Activity {
 			gps.showSettingsAlert();
 		}
 
+		Log.i("WEATHER CHECK APP", "ABOUT TO START MESSENGER");
 		// GET SEARCHED FOR MOVIE INFORMATION
 		Messenger messenger = new Messenger(searchServiceHandler);
 		Intent startServiceIntent = new Intent(getApplicationContext(), GetDataService.class);
 		startServiceIntent.putExtra(GetDataService.MESSENGER_KEY,messenger);
-		startServiceIntent.setData(Uri.parse("http://api.wunderground.com/api/c6dc8ff98c36bc6c/geolookup/q/"+ Uri.encode(String.valueOf(latitude))+","+ Uri.encode(String.valueOf(longitude))+".json"));
+		startServiceIntent.setData(Uri.parse("http://api.wunderground.com/api/c6dc8ff98c36bc6c/geolookup/conditions/q/"+Uri.encode(String.valueOf(latitude))+","+ Uri.encode(String.valueOf(longitude))+".json"));
+		//startServiceIntent.setData(Uri.parse("http://api.wunderground.com/api/c6dc8ff98c36bc6c/geolookup/q/0,0.json"));
 		startService(startServiceIntent);
 
 	}

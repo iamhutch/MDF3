@@ -12,6 +12,7 @@ package com.lucyhutcheson.libs;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -39,7 +40,10 @@ public class GetDataService extends IntentService {
 	public static final String MESSENGER_KEY = "messenger";
 	Messenger messenger;
 	Message message;
+	String response;
+	String noResponseError;
 
+	
 	/**
 	 * Instantiates a new download service.
 	 *           
@@ -77,42 +81,46 @@ public class GetDataService extends IntentService {
 
 		// QUERY URL IF NETWORK IS AVAILABLE
 		if (networkInfo != null && networkInfo.isConnected()) {
-			String response = "";
 			try {
 				response = WebConnections.getURLStringResponse(localURL);
 
 				try {
 					// GET OUR JSON RESPONSE
 					JSONObject jsonResult = new JSONObject(response);
-					Log.i("JSON RESPONSE", jsonResult.toString());
+					Log.i("JSON OBJECT", jsonResult.toString());
 					
-					// NO RESPONSE RECEIVED
-					if (jsonResult.getString("total").compareTo("0") == 0) {
-						Toast toast = Toast.makeText(getApplicationContext(), "Movies Not Found",
+					
+					// NO LOCATION RECEIVED
+					if (jsonResult.isNull("location")) {
+						Log.i("JSON RESPONSE", "NO RESPONSE RECEIVED");
+						Toast toast = Toast.makeText(getApplicationContext(), "Location Not Found",
 								Toast.LENGTH_SHORT);
 						toast.show();
 						message.arg1 = Activity.RESULT_CANCELED;
-						message.obj = "Movie Not Found";
+						message.obj = "Location Not Found";
 						try {
 							messenger.send(message);
 						} catch (RemoteException e) {
 							response = null;
 							message.arg1 = Activity.RESULT_CANCELED;
-							message.obj = "Movie Not Found";
+							message.obj = "Location Not Found";
 							Log.i("MESSENGER", "ERROR SENDING MESSAGE");
 							e.printStackTrace();
 						}
 
 					} else {
+						Log.i("JSON RESPONSE DATA", jsonResult.getString("location"));
 						// GET OUR DATA FROM THE JSON ARRAY
-						JSONObject results = jsonResult.getJSONArray("movies").getJSONObject(0);
+						
+						//JSONObject results = jsonResult.getJSONArray("movies").getJSONObject(0);
+						String stringResults = jsonResult.getString("location");
 						
 						// SAVE THE DATA TO OUR TEMP FILE FOR INCLUSION IN FAVORITES IF SELECTED BY USER
-						FileFunctions.storeStringFile(getApplicationContext(), "temp", results.toString(), true);
+						FileFunctions.storeStringFile(getApplicationContext(), "temp", stringResults, true);
 						
 						// SETUP OUR MESSAGE AND SEND
 						message.arg1 = Activity.RESULT_OK;
-						message.obj = results;
+						message.obj = stringResults;
 						try {
 							messenger.send(message);
 						} catch (RemoteException e) {

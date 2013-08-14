@@ -4,26 +4,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <GridLayout
+        android:id="@+id/weatherData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:columnCount="2"
+        android:padding="10dip" >
 
-        <Button
-            android:id="@+id/_btnBigPic"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/btnBigPic" />
-        
+        <TextView
+            android:id="@+id/_temp"  />
+
+
+    </GridLayout>
+
+    <Button
+        android:id="@+id/_btnBigPic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnBigPic" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/_imageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/image_taken"
+            android:visibility="visible" />
     </LinearLayout>
-    
-    <ImageView
-        android:id="@+id/_imageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:contentDescription="@string/image_taken"
-        android:visibility="visible" />
 
-    
 </LinearLayout>
