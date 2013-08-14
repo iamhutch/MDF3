@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WeatherCheck</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="btnBigPic">Take (big) Picture</string>
+    <string name="btnSmallPic">Take (small) Picture</string>
+    <string name="btnVideo">Take Video</string>
+    <string name="cannot">Cannot</string>
+    <string name="album_name">WeatherCheck Album</string>
+    <string name="image_taken">Image Taken</string>
+    
+</resources>
