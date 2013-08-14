@@ -1,3 +1,13 @@
+/*
+ * project		WeatherCheck
+ * 
+ * package		com.lucyhutcheson.weathercheck
+ * 
+ * @author		Lucy Hutcheson
+ * 
+ * date			Aug 13, 2013
+ * 
+ */
 package com.lucyhutcheson.weathercheck;
 
 import java.io.File;
@@ -5,6 +15,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.lucyhutcheson.libs.GPSTracker;
+import com.lucyhutcheson.libs.GetDataService;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,16 +34,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+/**
+ * MainActivity allows users to see current weather as well as take a picture
+ * with the camera which gets saved to the device.
+ */
+@SuppressLint("HandlerLeak")
 public class MainActivity extends Activity {
-
-	private static final int ACTION_TAKE_PHOTO_B = 1;
-	private static final int ACTION_TAKE_PHOTO_S = 2;
 
 	private static final String BITMAP_STORAGE_KEY = "viewbitmap";
 	private static final String IMAGEVIEW_VISIBILITY_STORAGE_KEY = "imageviewvisibility";
@@ -35,17 +57,57 @@ public class MainActivity extends Activity {
 	private Bitmap _ImageBitmap;
 
 	private String _CurrentPhotoPath;
+	private GPSTracker gps;
+	double latitude;
+	double longitude;
 
 	private static final String JPEG_FILE_PREFIX = "IMG_";
 	private static final String JPEG_FILE_SUFFIX = ".jpg";
 
 	private AlbumStorageDirFactory _AlbumStorageDirFactory = null;
 
-	/* Photo album for this application */
+	// Handle communication between this activity and
+	// GetDataService class
+	Handler searchServiceHandler = new Handler() {
+
+		public void handleMessage(Message mymessage) {
+
+	        if (mymessage.arg1 == RESULT_OK	&& mymessage.obj != null) {
+
+		        
+		        Log.i("RESPONSE", mymessage.obj.toString());
+				JSONObject json = null;
+				try {
+					json = new JSONObject(mymessage.obj.toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				Log.i("UPDATE WITH JSON", json.toString());
+				//updateData(json);
+			} else if (mymessage.arg1 == RESULT_CANCELED && mymessage.obj != null){
+				Toast.makeText(MainActivity.this,mymessage.obj.toString(), Toast.LENGTH_LONG).show();
+
+			} else {
+				Toast.makeText(MainActivity.this,"Download failed.", Toast.LENGTH_LONG).show();
+			}
+		}
+
+	};
+	
+	/**
+	 * Gets the album name for this application.
+	 *
+	 * @return the album name
+	 */
 	private String getAlbumName() {
 		return getString(R.string.album_name);
 	}
 
+	/**
+	 * Gets the album directory to save to.
+	 *
+	 * @return the album dir
+	 */
 	private File getAlbumDir() {
 		File storageDir = null;
 
@@ -72,6 +134,12 @@ public class MainActivity extends Activity {
 		return storageDir;
 	}
 
+	/**
+	 * Creates the image file.
+	 *
+	 * @return the file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@SuppressLint("SimpleDateFormat")
 	private File createImageFile() throws IOException {
 		// Create an image file name
@@ -84,14 +152,21 @@ public class MainActivity extends Activity {
 		return imageF;
 	}
 
+	/**
+	 * Sets the up photo file.
+	 *
+	 * @return the file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private File setUpPhotoFile() throws IOException {
-
-		File f = createImageFile();
-		_CurrentPhotoPath = f.getAbsolutePath();
-
-		return f;
+		File _f = createImageFile();
+		_CurrentPhotoPath = _f.getAbsolutePath();
+		return _f;
 	}
 
+	/**
+	 * Sets the picture size so it isn't so large.
+	 */
 	private void setPic() {
 
 		/* There isn't enough memory to open up more than a couple camera photos */
@@ -102,100 +177,95 @@ public class MainActivity extends Activity {
 		int targetH = _ImageView.getHeight();
 
 		/* Get the size of the image */
-		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-		bmOptions.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(_CurrentPhotoPath, bmOptions);
-		int photoW = bmOptions.outWidth;
-		int photoH = bmOptions.outHeight;
+		BitmapFactory.Options _bmOptions = new BitmapFactory.Options();
+		_bmOptions.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(_CurrentPhotoPath, _bmOptions);
+		int _photoW = _bmOptions.outWidth;
+		int _photoH = _bmOptions.outHeight;
 
 		/* Figure out which way needs to be reduced less */
 		int scaleFactor = 1;
 		if ((targetW > 0) || (targetH > 0)) {
-			scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+			scaleFactor = Math.min(_photoW / targetW, _photoH / targetH);
 		}
 
 		/* Set bitmap options to scale the image decode target */
-		bmOptions.inJustDecodeBounds = false;
-		bmOptions.inSampleSize = scaleFactor;
-		bmOptions.inPurgeable = true;
+		_bmOptions.inJustDecodeBounds = false;
+		_bmOptions.inSampleSize = scaleFactor;
+		_bmOptions.inPurgeable = true;
 
 		/* Decode the JPEG file into a Bitmap */
-		Bitmap bitmap = BitmapFactory.decodeFile(_CurrentPhotoPath, bmOptions);
+		Bitmap _bitmap = BitmapFactory.decodeFile(_CurrentPhotoPath, _bmOptions);
 
 		/* Associate the Bitmap to the ImageView */
-		_ImageView.setImageBitmap(bitmap);
+		_ImageView.setImageBitmap(_bitmap);
 		_ImageView.setVisibility(View.VISIBLE);
 	}
 
+	/**
+	 * Gallery add pic.
+	 */
 	private void galleryAddPic() {
-		Intent mediaScanIntent = new Intent(
+		Intent _mediaScanIntent = new Intent(
 				"android.intent.action.MEDIA_SCANNER_SCAN_FILE");
-		File f = new File(_CurrentPhotoPath);
-		Uri contentUri = Uri.fromFile(f);
-		mediaScanIntent.setData(contentUri);
-		this.sendBroadcast(mediaScanIntent);
+		File _f = new File(_CurrentPhotoPath);
+		Uri _contentUri = Uri.fromFile(_f);
+		_mediaScanIntent.setData(_contentUri);
+		this.sendBroadcast(_mediaScanIntent);
 	}
 
-	private void dispatchTakePictureIntent(int actionCode) {
+	/**
+	 * Dispatch take picture intent.
+	 *
+	 * @param actionCode the action code
+	 */
+	private void dispatchTakePictureIntent() {
 
-		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		Intent _takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		File _f = null;
 
-		switch (actionCode) {
-		case ACTION_TAKE_PHOTO_B:
-			File f = null;
-
-			try {
-				f = setUpPhotoFile();
-				_CurrentPhotoPath = f.getAbsolutePath();
-				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-						Uri.fromFile(f));
-			} catch (IOException e) {
-				e.printStackTrace();
-				f = null;
-				_CurrentPhotoPath = null;
-			}
-			break;
-
-		default:
-			break;
-		} // switch
-
-		startActivityForResult(takePictureIntent, actionCode);
+		try {
+			_f = setUpPhotoFile();
+			_CurrentPhotoPath = _f.getAbsolutePath();
+			_takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+					Uri.fromFile(_f));
+		} catch (IOException e) {
+			e.printStackTrace();
+			_f = null;
+			_CurrentPhotoPath = null;
+		}
+		startActivityForResult(_takePictureIntent, 1);
 	}
 
-	private void handleSmallCameraPhoto(Intent intent) {
-		Bundle extras = intent.getExtras();
-		_ImageBitmap = (Bitmap) extras.get("data");
-		_ImageView.setImageBitmap(_ImageBitmap);
-		_ImageView.setVisibility(View.VISIBLE);
-	}
 
-	private void handleBigCameraPhoto() {
-
+	/**
+	 * Handle camera photo.
+	 */
+	private void handleCameraPhoto() {
 		if (_CurrentPhotoPath != null) {
 			setPic();
 			galleryAddPic();
 			_CurrentPhotoPath = null;
 		}
-
 	}
 
+	/**
+	 * Button to take a photo.
+	 *
+	 */
 	Button.OnClickListener mTakePicOnClickListener = new Button.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
-		}
-	};
-
-	Button.OnClickListener mTakePicSOnClickListener = new Button.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			dispatchTakePictureIntent(ACTION_TAKE_PHOTO_S);
+			dispatchTakePictureIntent();
 		}
 	};
 
 
-	/** Called when the activity is first created. */
+	/**
+	 * Called when the activity is first created.
+	 *
+	 * @param savedInstanceState the saved instance state
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -204,12 +274,8 @@ public class MainActivity extends Activity {
 		_ImageView = (ImageView) findViewById(R.id._imageView);
 		_ImageBitmap = null;
 
-		Button picBtn = (Button) findViewById(R.id._btnBigPic);
-		setBtnListenerOrDisable(picBtn, mTakePicOnClickListener,
-				MediaStore.ACTION_IMAGE_CAPTURE);
-
-		Button picSBtn = (Button) findViewById(R.id._btnSmallPic);
-		setBtnListenerOrDisable(picSBtn, mTakePicSOnClickListener,
+		Button _picBtn = (Button) findViewById(R.id._btnBigPic);
+		setBtnListenerOrDisable(_picBtn, mTakePicOnClickListener,
 				MediaStore.ACTION_IMAGE_CAPTURE);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
@@ -217,29 +283,38 @@ public class MainActivity extends Activity {
 		} else {
 			_AlbumStorageDirFactory = new BaseAlbumDirFactory();
 		}
+		
+		gps = new GPSTracker(MainActivity.this);
+		if (gps.canGetLocation()) {
+			latitude = gps.getLatitude();
+			longitude = gps.getLongitude();
+		} else {
+			gps.showSettingsAlert();
+		}
+
+		// GET SEARCHED FOR MOVIE INFORMATION
+		Messenger messenger = new Messenger(searchServiceHandler);
+		Intent startServiceIntent = new Intent(getApplicationContext(), GetDataService.class);
+		startServiceIntent.putExtra(GetDataService.MESSENGER_KEY,messenger);
+		startServiceIntent.setData(Uri.parse("http://api.wunderground.com/api/c6dc8ff98c36bc6c/geolookup/q/"+ Uri.encode(String.valueOf(latitude))+","+ Uri.encode(String.valueOf(longitude))+".json"));
+		startService(startServiceIntent);
+
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case ACTION_TAKE_PHOTO_B: {
-			if (resultCode == RESULT_OK) {
-				handleBigCameraPhoto();
-			}
-			break;
-		} // ACTION_TAKE_PHOTO_B
-
-		case ACTION_TAKE_PHOTO_S: {
-			if (resultCode == RESULT_OK) {
-				handleSmallCameraPhoto(data);
-			}
-			break;
-		} // ACTION_TAKE_PHOTO_S
-
-		} // switch
+		if (resultCode == RESULT_OK) {
+			handleCameraPhoto();
+		}
 	}
 
 	// Some lifecycle callbacks so that the image can survive orientation change
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putParcelable(BITMAP_STORAGE_KEY, _ImageBitmap);
@@ -248,13 +323,15 @@ public class MainActivity extends Activity {
 		super.onSaveInstanceState(outState);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
+	 */
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		_ImageBitmap = savedInstanceState.getParcelable(BITMAP_STORAGE_KEY);
 		_ImageView.setImageBitmap(_ImageBitmap);
-		_ImageView
-				.setVisibility(savedInstanceState
+		_ImageView.setVisibility(savedInstanceState
 						.getBoolean(IMAGEVIEW_VISIBILITY_STORAGE_KEY) ? ImageView.VISIBLE
 						: ImageView.INVISIBLE);
 	}
@@ -282,6 +359,13 @@ public class MainActivity extends Activity {
 		return list.size() > 0;
 	}
 
+	/**
+	 * Sets the btn listener or disable.
+	 *
+	 * @param btn the btn
+	 * @param onClickListener the on click listener
+	 * @param intentName the intent name
+	 */
 	private void setBtnListenerOrDisable(Button btn,
 			Button.OnClickListener onClickListener, String intentName) {
 		if (isIntentAvailable(this, intentName)) {
