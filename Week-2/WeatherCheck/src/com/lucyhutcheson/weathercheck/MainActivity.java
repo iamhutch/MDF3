@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -33,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -46,6 +46,7 @@ import android.os.Messenger;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,8 +69,9 @@ public class MainActivity extends Activity {
 	double latitude;
 	double longitude;
 
-	private static final String JPEG_FILE_PREFIX = "IMG_";
+	private static final String JPEG_FILE_PREFIX = "WeatherApp_";
 	private static final String JPEG_FILE_SUFFIX = ".jpg";
+	private static int RESULT_LOAD_IMAGE = 1;
 
 	private AlbumStorageDirFactory _AlbumStorageDirFactory = null;
 
@@ -97,8 +99,7 @@ public class MainActivity extends Activity {
 
 			} else {
 				Toast.makeText(MainActivity.this,"Download failed.", Toast.LENGTH_LONG).show();
-			}
-			
+			}	
 		}
 
 	};
@@ -112,9 +113,13 @@ public class MainActivity extends Activity {
 	public void updateData(JSONObject data) {
 		Log.i("UPDATE DATA", data.toString());
 		try {
-			((TextView) findViewById(R.id._temp)).setText(data
-					.getString("temp_f"));
-			
+			JSONObject city = data.getJSONObject("display_location");
+			((TextView) findViewById(R.id._temp)).setText(data.getString("temp_f") +  (char) 0x00B0);
+			((TextView) findViewById(R.id._detailsWeather)).setText(data.getString("weather"));
+			((TextView) findViewById(R.id._detailsWind)).setText(data.getString("wind_string"));
+			((TextView) findViewById(R.id._detailsFeelslike)).setText(data.getString("feelslike_string"));
+			((TextView) findViewById(R.id._detailsCity)).setText(city.getString("full"));
+
 			String stringURL = data.getString("icon_url");
 			
 			// Create an object for subclass of AsyncTask
@@ -122,14 +127,20 @@ public class MainActivity extends Activity {
 	        // Execute the task
 	        task.execute(new String[] { stringURL });
 
-
 		} catch (JSONException e) {
 			e.printStackTrace();
 			Log.e("JSON ERROR", e.toString());
 		}
 	}
 
+	/**
+	 * The Class GetXMLTask.
+	 */
 	private class GetXMLTask extends AsyncTask<String, Void, Bitmap> {
+        
+        /* (non-Javadoc)
+         * @see android.os.AsyncTask#doInBackground(Params[])
+         */
         @Override
         protected Bitmap doInBackground(String... urls) {
             Bitmap thumb = null;
@@ -140,13 +151,21 @@ public class MainActivity extends Activity {
         }
  
         // Sets the Bitmap returned by doInBackground
+        /* (non-Javadoc)
+         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+         */
         @Override
         protected void onPostExecute(Bitmap result) {
         	ImageView _imageView = (ImageView) findViewById(R.id._imageWeather);
             _imageView.setImageBitmap(result);
         }
  
-        // Creates Bitmap from InputStream and returns it
+        /**
+         * Creates Bitmap from InputStream and returns it
+         *
+         * @param url the url
+         * @return the bitmap
+         */
         private Bitmap downloadImage(String url) {
             Bitmap bitmap = null;
             InputStream stream = null;
@@ -164,7 +183,13 @@ public class MainActivity extends Activity {
             return bitmap;
         }
  
-        // Makes HttpURLConnection and returns InputStream
+        /**
+         * Makes HttpURLConnection and returns InputStream
+         *         
+         * @param urlString the url string
+         * @return the http connection
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
         private InputStream getHttpConnection(String urlString)
                 throws IOException {
             InputStream stream = null;
@@ -217,12 +242,10 @@ public class MainActivity extends Activity {
 					}
 				}
 			}
-
 		} else {
 			Log.v(getString(R.string.app_name),
 					"External storage is not mounted READ/WRITE.");
 		}
-
 		return storageDir;
 	}
 
@@ -309,13 +332,11 @@ public class MainActivity extends Activity {
 	/**
 	 * Dispatch take picture intent.
 	 *
-	 * @param actionCode the action code
 	 */
 	private void dispatchTakePictureIntent() {
 
 		Intent _takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File _f = null;
-
 		try {
 			_f = setUpPhotoFile();
 			_CurrentPhotoPath = _f.getAbsolutePath();
@@ -341,6 +362,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	
 	/**
 	 * Button to take a photo.
 	 *
@@ -362,10 +384,19 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
 		Log.i("WEATHER CHECK APP", "MAIN ACTIVITY STARTED");
 		_ImageView = (ImageView) findViewById(R.id._imageView);
 		_ImageBitmap = null;
+		
+		// CLEAR BUTTON AND HANDLER
+		Button albumBtn = (Button) findViewById(R.id._btnAlbum);
+		albumBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				startActivityForResult(i, RESULT_LOAD_IMAGE);
+			}
+		});
 
 		Button _picBtn = (Button) findViewById(R.id._btnBigPic);
 		setBtnListenerOrDisable(_picBtn, mTakePicOnClickListener,
@@ -377,7 +408,6 @@ public class MainActivity extends Activity {
 			_AlbumStorageDirFactory = new BaseAlbumDirFactory();
 		}
 		
-		Log.i("WEATHER CHECK APP", "ABOUT TO START GPS");
 		gps = new GPSTracker(MainActivity.this);
 		if (gps.canGetLocation()) {
 			latitude = gps.getLatitude();
@@ -386,13 +416,11 @@ public class MainActivity extends Activity {
 			gps.showSettingsAlert();
 		}
 
-		Log.i("WEATHER CHECK APP", "ABOUT TO START MESSENGER");
-		// GET SEARCHED FOR MOVIE INFORMATION
+		// GET WEATHER INFORMATION BASED ON GPS LATITUDE AND LONGITUDE OF USER LOCATIOIN
 		Messenger messenger = new Messenger(searchServiceHandler);
 		Intent startServiceIntent = new Intent(getApplicationContext(), GetDataService.class);
 		startServiceIntent.putExtra(GetDataService.MESSENGER_KEY,messenger);
 		startServiceIntent.setData(Uri.parse("http://api.wunderground.com/api/c6dc8ff98c36bc6c/geolookup/conditions/q/"+Uri.encode(String.valueOf(latitude))+","+ Uri.encode(String.valueOf(longitude))+".json"));
-		//startServiceIntent.setData(Uri.parse("http://api.wunderground.com/api/c6dc8ff98c36bc6c/geolookup/q/0,0.json"));
 		startService(startServiceIntent);
 
 	}
@@ -402,10 +430,27 @@ public class MainActivity extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
+		super.onActivityResult(requestCode, resultCode, data);
+        
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+ 
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+ 
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+             
+            _ImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+         
+        } else if (resultCode == RESULT_OK) {
 			handleCameraPhoto();
 		}
 	}
+	
 
 	// Some lifecycle callbacks so that the image can survive orientation change
 	/* (non-Javadoc)
@@ -419,6 +464,7 @@ public class MainActivity extends Activity {
 		super.onSaveInstanceState(outState);
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
 	 */
@@ -432,12 +478,12 @@ public class MainActivity extends Activity {
 						: ImageView.INVISIBLE);
 	}
 
+	
 	/**
 	 * Indicates whether the specified action can be used as an intent. This
 	 * method queries the package manager for installed packages that can
 	 * respond to an intent with the specified action. If no suitable package is
 	 * found, this method returns false.
-	 * http://android-developers.blogspot.com/2009/01/can-i-use-this-intent.html
 	 * 
 	 * @param context
 	 *            The application's environment.
@@ -456,19 +502,17 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Sets the btn listener or disable.
+	 * Sets the button listener or disable.
 	 *
 	 * @param btn the btn
 	 * @param onClickListener the on click listener
 	 * @param intentName the intent name
 	 */
-	private void setBtnListenerOrDisable(Button btn,
-			Button.OnClickListener onClickListener, String intentName) {
+	private void setBtnListenerOrDisable(Button btn,Button.OnClickListener onClickListener, String intentName) {
 		if (isIntentAvailable(this, intentName)) {
 			btn.setOnClickListener(onClickListener);
 		} else {
-			btn.setText(getText(R.string.cannot).toString() + " "
-					+ btn.getText());
+			btn.setText(getText(R.string.cannot).toString() + " " + btn.getText());
 			btn.setClickable(false);
 		}
 	}

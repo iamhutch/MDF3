@@ -21,14 +21,26 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int bg=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int _btnBigPic=0x7f080003;
-        public static final int _imageView=0x7f080002;
-        public static final int _imageWeather=0x7f080000;
-        public static final int _temp=0x7f080001;
-        public static final int action_settings=0x7f080004;
+        public static final int _btnAlbum=0x7f08000c;
+        public static final int _btnBigPic=0x7f08000b;
+        public static final int _detailsCity=0x7f080009;
+        public static final int _detailsFeelslike=0x7f080008;
+        public static final int _detailsWeather=0x7f080006;
+        public static final int _detailsWind=0x7f080007;
+        public static final int _farenheit=0x7f080004;
+        public static final int _imageView=0x7f08000e;
+        public static final int _imageWeather=0x7f080002;
+        public static final int _temp=0x7f080003;
+        public static final int action_settings=0x7f08000f;
+        public static final int buttons=0x7f08000a;
+        public static final int grid=0x7f080001;
+        public static final int image=0x7f08000d;
+        public static final int imageView1=0x7f080000;
+        public static final int weatherDetails=0x7f080005;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -40,11 +52,18 @@ public final class R {
         public static final int action_settings=0x7f050001;
         public static final int album_name=0x7f050005;
         public static final int app_name=0x7f050000;
+        public static final int background=0x7f05000d;
         public static final int btnBigPic=0x7f050003;
         public static final int cannot=0x7f050004;
+        public static final int city=0x7f05000a;
         public static final int current_temp=0x7f050007;
+        public static final int feels_like=0x7f05000e;
         public static final int hello_world=0x7f050002;
         public static final int image_taken=0x7f050006;
+        public static final int view_album=0x7f050008;
+        public static final int weather=0x7f05000b;
+        public static final int weather_image=0x7f050009;
+        public static final int wind=0x7f05000c;
     }
     public static final class style {
         /** 

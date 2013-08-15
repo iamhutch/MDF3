@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:divider="?android:attr/dividerHorizontal"
+    android:orientation="vertical"
+    android:showDividers="middle"
+    android:textColor="@android:color/white" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:contentDescription="@string/background"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg" />
 
     <GridLayout
+        android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:columnCount="2" >
 
         <LinearLayout
@@ -19,7 +32,7 @@
                 android:id="@+id/_imageWeather"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:contentDescription="Weather Image" />
+                android:contentDescription="@string/weather_image" />
         </LinearLayout>
 
         <LinearLayout
@@ -34,30 +47,133 @@
                 android:text="@string/current_temp"
                 android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/_temp"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="36sp" />
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/_temp"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/_farenheit"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="36sp" />
+            </LinearLayout>
         </LinearLayout>
     </GridLayout>
 
-    <LinearLayout
+    <GridLayout
+        android:id="@+id/weatherDetails"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_below="@id/grid"
+        android:columnCount="2"
+        android:paddingBottom="20dp" >
+
+        <TextView
+            android:paddingLeft="25dp"
+            android:text="@string/weather"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/_detailsWeather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:paddingLeft="25dp"
+            android:text="@string/wind"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/_detailsWind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:paddingLeft="25dp"
+            android:text="@string/feels_like"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/_detailsFeelslike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:paddingLeft="25dp"
+            android:text="@string/city"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/_detailsCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </GridLayout>
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/_btnBigPic"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/btnBigPic" />
+
+        <Button
+            android:id="@+id/_btnAlbum"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/view_album" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/buttons"
+        android:gravity="center" >
 
         <ImageView
             android:id="@+id/_imageView"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:contentDescription="@string/image_taken" />
+            android:contentDescription="@string/image_taken"
+            android:gravity="center" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/_btnBigPic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/btnBigPic" />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:layout_below="@id/weatherDetails"
+        android:background="@android:color/white" />
 
-</LinearLayout>
+</RelativeLayout>
