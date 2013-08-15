@@ -12,6 +12,11 @@ package com.lucyhutcheson.weathercheck;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +36,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -105,23 +111,80 @@ public class MainActivity extends Activity {
 	 */
 	public void updateData(JSONObject data) {
 		Log.i("UPDATE DATA", data.toString());
-		/*try {
-			((TextView) findViewById(R.id._name)).setText(data
-					.getString("title"));
-			((TextView) findViewById(R.id._rating)).setText(data.getJSONObject(
-					"ratings").getString("critics_score"));
-			((TextView) findViewById(R.id._year)).setText(data
-					.getString("year"));
-			((TextView) findViewById(R.id._mpaa)).setText(data
-					.getString("mpaa_rating"));
-			((TextView) findViewById(R.id._synopsis)).setText(data
-					.getString("critics_consensus"));
+		try {
+			((TextView) findViewById(R.id._temp)).setText(data
+					.getString("temp_f"));
+			
+			String stringURL = data.getString("icon_url");
+			
+			// Create an object for subclass of AsyncTask
+	        GetXMLTask task = new GetXMLTask();
+	        // Execute the task
+	        task.execute(new String[] { stringURL });
+
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 			Log.e("JSON ERROR", e.toString());
-		}*/
+		}
 	}
 
+	private class GetXMLTask extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap thumb = null;
+            for (String url : urls) {
+            	thumb = downloadImage(url);
+            }
+            return thumb;
+        }
+ 
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+        	ImageView _imageView = (ImageView) findViewById(R.id._imageWeather);
+            _imageView.setImageBitmap(result);
+        }
+ 
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+            Bitmap bitmap = null;
+            InputStream stream = null;
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize = 1;
+ 
+            try {
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return bitmap;
+        }
+ 
+        // Makes HttpURLConnection and returns InputStream
+        private InputStream getHttpConnection(String urlString)
+                throws IOException {
+            InputStream stream = null;
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+ 
+            try {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.connect();
+ 
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    stream = httpConnection.getInputStream();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return stream;
+        }
+    }	
 	
 	/**
 	 * Gets the album name for this application.

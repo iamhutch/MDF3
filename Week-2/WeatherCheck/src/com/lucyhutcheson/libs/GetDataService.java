@@ -109,18 +109,21 @@ public class GetDataService extends IntentService {
 						}
 
 					} else {
-						Log.i("JSON RESPONSE DATA", jsonResult.getString("location"));
+						Log.i("JSON RESPONSE DATA", jsonResult.getString("current_observation"));
 						// GET OUR DATA FROM THE JSON ARRAY
 						
-						//JSONObject results = jsonResult.getJSONArray("movies").getJSONObject(0);
-						String stringResults = jsonResult.getString("location");
+						JSONObject arrayResults = jsonResult.getJSONObject("current_observation");
+						
+						String temp = arrayResults.getString("temp_f");
+						Log.i("JSON TEMP", temp);
+						//String stringResults = jsonResult.getString("location");
 						
 						// SAVE THE DATA TO OUR TEMP FILE FOR INCLUSION IN FAVORITES IF SELECTED BY USER
-						FileFunctions.storeStringFile(getApplicationContext(), "temp", stringResults, true);
+						FileFunctions.storeStringFile(getApplicationContext(), "temp", arrayResults.toString(), true);
 						
 						// SETUP OUR MESSAGE AND SEND
 						message.arg1 = Activity.RESULT_OK;
-						message.obj = stringResults;
+						message.obj = arrayResults;
 						try {
 							messenger.send(message);
 						} catch (RemoteException e) {
