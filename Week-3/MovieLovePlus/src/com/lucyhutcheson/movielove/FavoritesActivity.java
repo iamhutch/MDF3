@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.lucyhutcheson.movielove.FavoritesFragment.FavoritesListener;
 
@@ -30,6 +31,7 @@ public class FavoritesActivity extends Activity implements FavoritesListener {
 
 		// Setup our content view
 		setContentView(R.layout.favoritesfrag);		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		_context = this;
 	}
@@ -39,6 +41,19 @@ public class FavoritesActivity extends Activity implements FavoritesListener {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			FavoritesActivity.this.finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	
 	@Override
 	public void finish(){

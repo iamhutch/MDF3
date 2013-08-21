@@ -168,9 +168,6 @@ public class MainActivity extends Activity implements FormListener,
 		case R.id.action_favorites:
 			onFavoritesList();
 			return true;
-		case R.id.action_info:
-
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -290,11 +287,9 @@ public class MainActivity extends Activity implements FormListener,
 	 */
 	@Override
 	public void onLatestList() {
-		// INTENT TO START MAIN ACTIVITY
+		// INTENT TO START LATEST MOVIE ACTIVITY
 		Intent intent = new Intent(MainActivity.this, LatestActivity.class);
 		MainActivity.this.startActivity(intent);
-		MainActivity.this.finish();
-
 	}
 
 	/*

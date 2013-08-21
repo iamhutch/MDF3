@@ -63,7 +63,7 @@ public class WebConnections {
 				response = new String(contentBytes, 0, bytesRead);
 				responseBuffer.append(response);
 			} 
-			Log.i("BUFFER STRING", responseBuffer.toString());
+			//Log.i("BUFFER STRING", responseBuffer.toString());
 			// Return response buffer that has all our data
 			return responseBuffer.toString(); 
 			

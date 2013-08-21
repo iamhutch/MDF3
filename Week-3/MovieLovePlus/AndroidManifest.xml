@@ -37,9 +37,9 @@
         </activity>
         <activity
             android:name="com.lucyhutcheson.movielove.LatestActivity"
+            android:parentActivityName="com.lucyhutcheson.movielove.MainActivity"
             android:theme="@android:style/Theme.Holo"
-            android:windowSoftInputMode="stateHidden" 
-            android:parentActivityName="com.lucyhutcheson.movielove.MainActivity">
+            android:windowSoftInputMode="stateHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lucyhutcheson.movielove.MainActivity" />
@@ -56,7 +56,13 @@
             android:exported="false" >
         </provider>
 
-        <activity android:name="FavoritesActivity" >
+        <activity
+            android:name="FavoritesActivity"
+            android:theme="@android:style/Theme.Holo"
+            android:parentActivityName="com.lucyhutcheson.movielove.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lucyhutcheson.movielove.MainActivity" />
         </activity>
     </application>
 

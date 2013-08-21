@@ -20,7 +20,6 @@ public class LatestFragment extends Fragment {
 	
 	public interface LatestListener {
 		public void onLoadLatest(String URI);
-		public void onBackButton();
 	}
 	
 
@@ -50,14 +49,6 @@ public class LatestFragment extends Fragment {
 		editURI = (EditText) view.findViewById(R.id.searchField);
 		editURI.setText(MovieProvider.MovieData.CONTENT_URI.toString());
 
-		// VIEW LATEST MOVIES BUTTON AND HANDLER
-		Button backButton = (Button) view.findViewById(R.id.backbutton);
-		backButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				listener.onBackButton();
-			}
-		});
 
 		// VIEW LATEST MOVIES BUTTON AND HANDLER
 		Button loadLatest = (Button) view.findViewById(R.id.searchButton);

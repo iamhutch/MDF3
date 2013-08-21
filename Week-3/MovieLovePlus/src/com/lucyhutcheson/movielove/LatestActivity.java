@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -38,6 +37,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class MoviesActivity provides the view controller for the page that will
  * contain a list of the latest movies when initiated by the user from the main
@@ -59,7 +59,7 @@ public class LatestActivity extends Activity implements LatestListener {
 	String _selected;
 	
 	/**
-	 * GOOGLE ANALYTICS LIBRARY
+	 * GOOGLE ANALYTICS LIBRARY.
 	 */
 	@Override
 	public void onStart() {
@@ -68,6 +68,9 @@ public class LatestActivity extends Activity implements LatestListener {
 		EasyTracker.getInstance().activityStart(this); // Add this method.
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onStop()
+	 */
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -94,16 +97,18 @@ public class LatestActivity extends Activity implements LatestListener {
 
 	}
 
+	/* (non-Javadoc)
+	 * Handle selection from ActionBar
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
+			LatestActivity.this.finish();
 			return true;
-		default:
-			return super.onOptionsItemSelected(item);
 		}
+		return super.onOptionsItemSelected(item);
 	}
 		
 	// Handle communication between this activity and DownloadService class
@@ -158,6 +163,9 @@ public class LatestActivity extends Activity implements LatestListener {
 	};
 	
 
+	/* (non-Javadoc)
+	 * @see com.lucyhutcheson.movielove.LatestFragment.LatestListener#onLoadLatest(java.lang.String)
+	 */
 	@Override
 	public void onLoadLatest(String URI) {
 		
@@ -172,11 +180,11 @@ public class LatestActivity extends Activity implements LatestListener {
 	    pDialog = ProgressDialog.show(context, "Downloading", "Please wait...");
 	}
 
-	@Override
-	public void onBackButton() {
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
-	}
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		if (editURI.getText().toString() != null){
@@ -186,6 +194,9 @@ public class LatestActivity extends Activity implements LatestListener {
 		super.onSaveInstanceState(savedInstanceState);	
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
+	 */
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);	

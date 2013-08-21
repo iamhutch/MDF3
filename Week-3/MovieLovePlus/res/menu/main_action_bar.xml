@@ -9,11 +9,6 @@
     <item
         android:id="@+id/action_favorites"
         android:icon="@drawable/rating_favorite"
-        android:showAsAction="always"
         android:title="@string/view_favorites"/>
-    <item
-        android:id="@+id/action_info"
-        android:icon="@drawable/action_about"
-        android:title="@string/developer_info"/>
 
 </menu>
