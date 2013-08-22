@@ -1,4 +1,4 @@
-package com.lucyhutcheson.ChristmastCountdownWidget;
+package com.lucyhutcheson.christmastcountdownwidget;
 
 import java.util.Calendar;
 

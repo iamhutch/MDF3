@@ -1,4 +1,4 @@
-package com.lucyhutcheson.ChristmastCountdownWidget;
+package com.lucyhutcheson.christmastcountdownwidget;
 
 import com.lucyhutcheson.christmascountdown.R;
 

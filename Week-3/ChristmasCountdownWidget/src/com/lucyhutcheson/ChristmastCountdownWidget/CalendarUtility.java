@@ -1,11 +1,10 @@
-package com.lucyhutcheson.ChristmastCountdownWidget;
+package com.lucyhutcheson.christmastcountdownwidget;
 
 import java.util.Calendar;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.media.audiofx.BassBoost.Settings;
 
 public class CalendarUtility {
 	
@@ -66,7 +65,7 @@ public class CalendarUtility {
 	
 	public long DaysToChristmas() {
 		Calendar now = getCalendarNoHours();
-		long diffMsec = getChristmasMsec() = now.getTimeInMillis();
+		long diffMsec = getChristmasMsec() - now.getTimeInMillis();
 		long diffDays = diffMsec / (24*60*60*1000);
 		return diffDays;
 	}
