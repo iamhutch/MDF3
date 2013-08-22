@@ -1,6 +1,5 @@
 package com.lucyhutcheson.christmascountdown;
 
-import java.util.Calendar;
 
 import com.lucyhutcheson.christmascountdown.R;
 
@@ -10,9 +9,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.RemoteViews;
 

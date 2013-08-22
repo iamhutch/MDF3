@@ -2,4 +2,8 @@
 
     <string name="app_name">ChristmasCountdown</string>
 
+    <string name="background">Background</string>
+
+    <string name="days_left_until_christmas">days left until Christmas</string>
+
 </resources>
