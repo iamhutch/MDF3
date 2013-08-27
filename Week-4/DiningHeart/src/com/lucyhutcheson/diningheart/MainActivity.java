@@ -12,6 +12,7 @@ package com.lucyhutcheson.diningheart;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -43,6 +44,11 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.i("VIEW BUTTON", "VIEW BUTTON CLICKED");
+				
+				// INTENT TO START VIEW ACTIVITY
+				Intent intent = new Intent(MainActivity.this,ViewActivity.class);
+				MainActivity.this.startActivity(intent);
+				MainActivity.this.finish();
 			}
 		});
 	}
@@ -54,6 +60,11 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.i("ADD BUTTON", "ADD BUTTON CLICKED");
+				
+				// INTENT TO START ADD ACTIVITY
+				Intent intent = new Intent(MainActivity.this,AddActivity.class);
+				MainActivity.this.startActivity(intent);
+				MainActivity.this.finish();
 			}
 		});
 

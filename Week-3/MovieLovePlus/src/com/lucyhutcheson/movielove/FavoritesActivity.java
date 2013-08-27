@@ -41,7 +41,6 @@ public class FavoritesActivity extends Activity implements FavoritesListener {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -54,7 +53,6 @@ public class FavoritesActivity extends Activity implements FavoritesListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-	
 	@Override
 	public void finish(){
 		Intent data = new Intent();
