@@ -16,26 +16,40 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends Activity {
+	
+	ImageButton viewButton;
+	ImageButton addButton;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		viewButtonListener();
+		addButtonListener();
+		
+		
+
+	}
+
+	public void viewButtonListener() {
 		// VIEW BUTTON AND HANDLER
-		Button viewButton = (Button) findViewById(R.id.viewBtn);
+		viewButton = (ImageButton) findViewById(R.id.viewBtn);
 		viewButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Log.i("VIEW BUTTON", "VIEW BUTTON CLICKED");
 			}
 		});
-
+	}
+	
+	public void addButtonListener() {
 		// ADD BUTTON AND HANDLER
-		Button addButton = (Button) findViewById(R.id.addBtn);
+		addButton = (ImageButton) findViewById(R.id.addBtn);
 		addButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -44,7 +58,6 @@ public class MainActivity extends Activity {
 		});
 
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
