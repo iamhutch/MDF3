@@ -6,5 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="view_button">View Button</string>
     <string name="add_button">Add Button</string>
+    <string name="my_favorite_dining_places">My Favorite Dining Places</string>
+    <string name="name">Name</string>
+    <string name="city">City</string>
 
 </resources>

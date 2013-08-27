@@ -48,7 +48,6 @@ public class MainActivity extends Activity {
 				// INTENT TO START VIEW ACTIVITY
 				Intent intent = new Intent(MainActivity.this,ViewActivity.class);
 				MainActivity.this.startActivity(intent);
-				MainActivity.this.finish();
 			}
 		});
 	}
@@ -64,7 +63,6 @@ public class MainActivity extends Activity {
 				// INTENT TO START ADD ACTIVITY
 				Intent intent = new Intent(MainActivity.this,AddActivity.class);
 				MainActivity.this.startActivity(intent);
-				MainActivity.this.finish();
 			}
 		});
 

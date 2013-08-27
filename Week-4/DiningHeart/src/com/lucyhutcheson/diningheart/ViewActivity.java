@@ -11,16 +11,39 @@
 package com.lucyhutcheson.diningheart;
 
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class ViewActivity extends Activity {
+	
+	private ArrayList<String> _movies;
+	private ArrayAdapter<String> _listAdapter;
+	Context _context;
+	private ListView _listView;
+
+	static final String[] FRUITS = new String[] {"Chik-fil-A", "Cracker Barrel", "Lonestar"};
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		
+		_context = this;
+		
+		// ATTACH LIST ADAPTER
+		_listView = (ListView) findViewById(R.id.listview);
+		_listAdapter = new ArrayAdapter<String>(_context,	android.R.layout.simple_list_item_1, FRUITS);
+		_listView.setAdapter(_listAdapter);
 
 	}
 	
