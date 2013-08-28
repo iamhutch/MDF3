@@ -14,6 +14,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -24,7 +25,9 @@ public class AddActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
+		
 		WebView myWebView = (WebView) findViewById(R.id.addWebView);
 		WebSettings webSettings = myWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
@@ -32,6 +35,16 @@ public class AddActivity extends Activity {
 
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			AddActivity.this.finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
