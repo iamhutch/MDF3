@@ -10,7 +10,6 @@
  */
 package com.lucyhutcheson.diningheart;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,32 +23,33 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class ViewActivity extends Activity {
-	
+
 	Context _context;
 	private ListView _listView;
 	HashMap<String, String> _favorites;
 	HashMap<String, String> favList = new HashMap<String, String>();
 	ArrayList<HashMap<String, String>> _diningPlacesArray;
-	static final String[] FROM = new String[] {"name", "city", "category"};
+	static final String[] FROM = new String[] { "name", "city", "category" };
 	static final int[] TO = new int[] { R.id.title, R.id.city, R.id.category };
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		_context = this;
-		
-		//favList = getFavorites();
-		//_diningPlacesArray.addAll(favList.keySet());
-		
+
+		favList = getFavorites();
+		// _diningPlacesArray.addAll(favList.keySet());
+
 		// ATTACH LIST ADAPTER
-		//_listView = (ListView) findViewById(R.id.listview);
-		//SimpleAdapter _myAdapter = new SimpleAdapter(_context, _diningPlacesArray, R.layout.view_row, FROM, TO);
-		//_listView.setAdapter(_myAdapter);
+		// _listView = (ListView) findViewById(R.id.listview);
+		// SimpleAdapter _myAdapter = new SimpleAdapter(_context,
+		// _diningPlacesArray, R.layout.view_row, FROM, TO);
+		// _listView.setAdapter(_myAdapter);
 
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
@@ -61,15 +61,12 @@ public class ViewActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	
 
 	/**
 	 * Function to get read the favorites file which contains any dining data
@@ -79,18 +76,28 @@ public class ViewActivity extends Activity {
 	 */
 	@SuppressWarnings("unchecked")
 	private HashMap<String, String> getFavorites() {
-		Object stored = FileFunctions.readObjectFile(_context, "favorites",	false);
-		HashMap<String, String> favorites;
+		Object stored = FileFunctions.readObjectFile(_context, "favorites",
+				false);
+		Log.i("FAVORITES", stored.toString());
+
+		HashMap<String, String> favorites = null;
 
 		// CHECK IF OBJECT EXISTS
 		if (stored == null) {
-			Log.i("FAVORITES", "NO FAVORITES FILE FOUND");
+			Log.i("FAVORITES FILE", "NO FAVORITES FILE FOUND");
 			favorites = new HashMap<String, String>();
 		}
 		// IF OBJECT EXISTS, BRING IN DATA AND ADD TO HASHMAP
 		else {
+			Log.i("FAVORITES FOUND", "NOT NULL");
 			// CAST HASHMAP
-			favorites = (HashMap<String, String>) stored;
+			try {
+				favorites = (HashMap<String, String>) stored;
+				Log.i("FAVORITES CAST", favorites.toString());
+			} catch (Exception e) {
+				Log.e("FAVORITES FOUND","ERROR");
+				e.printStackTrace();
+			}
 		}
 		return favorites;
 	}

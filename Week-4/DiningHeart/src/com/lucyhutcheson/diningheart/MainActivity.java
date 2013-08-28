@@ -10,11 +10,8 @@
  */
 package com.lucyhutcheson.diningheart;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -29,6 +26,10 @@ public class MainActivity extends Activity {
 	
 	ImageButton viewButton;
 	ImageButton addButton;
+	private HashMap<String, String> map;
+	private ArrayList<HashMap<String, String>> _diningPlaces;
+	
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,30 +39,20 @@ public class MainActivity extends Activity {
 		viewButtonListener();
 		addButtonListener();
 		
-		//_diningPlaces = new ArrayList<HashMap<String, String>>();
-		JSONArray array = new JSONArray();
-		JSONObject object = new JSONObject();
-		JSONObject object2 = new JSONObject();
-		try {
-			object.put("name", "Chik-fil-A");
-			object.put("city", "Killeen");
-			object.put("category", "American");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		array.put(object);
+		_diningPlaces = new ArrayList<HashMap<String, String>>();
+		map = new HashMap<String, String>();
+		map.put("name", "Chik-fil-A");
+		map.put("city", "Killeen");
+		map.put("category", "American");
+		_diningPlaces.add(map);
 
-		try {
-			object2.put("name", "Cracker Barrel");
-			object2.put("city", "Harker Heights");
-			object2.put("category", "Country");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		array.put(object2);
-
-		FileFunctions.storeStringFile(getApplicationContext(), "dining", array.toString(), true);
+		map = new HashMap<String, String>();
+		map.put("name", "Cracker Barrel");
+		map.put("city", "Harker Heights");
+		map.put("category", "Country");
+		_diningPlaces.add(map);
 		
+		FileFunctions.storeObjectFile(getApplicationContext(), "favorites", _diningPlaces, false);
 
 
 	}
