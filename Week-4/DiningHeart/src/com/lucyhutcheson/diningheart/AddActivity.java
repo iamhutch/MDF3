@@ -31,7 +31,7 @@ public class AddActivity extends Activity {
 		WebView myWebView = (WebView) findViewById(R.id.addWebView);
 		WebSettings webSettings = myWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
-		myWebView.loadUrl("http://www.chicdesigngeek.com");
+		myWebView.loadUrl("http://iamhutch.github.io/MDF3/Week-4/DiningHeart-Webpage/index.html");
 
 	}
 
