@@ -31,6 +31,9 @@ input {
 	padding-top: 20px;
 	padding-bottom: 20px;
 }
+#submit {
+	background: #943535;
+}
 footer {
 	font-size: 0.875em;
 	text-align: center;
