@@ -33,6 +33,8 @@ input {
 }
 #submit {
 	background: #943535;
+	font-family: bold;
+	color: #fff;
 }
 footer {
 	font-size: 0.875em;
