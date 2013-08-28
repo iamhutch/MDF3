@@ -21,7 +21,7 @@
         android:padding="10dp" >
 
         <TextView
-            android:id="@+id/movietitle"
+            android:id="@+id/nameLabel"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
@@ -30,10 +30,18 @@
             android:width="450dp" />
 
         <TextView
-            android:id="@+id/rating"
+            android:id="@+id/cityLabel"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:text="@string/city"
+            android:textStyle="bold"
+            android:width="80dp" />
+
+        <TextView
+            android:id="@+id/categoryLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="@string/category"
             android:textStyle="bold"
             android:width="80dp" />
     </LinearLayout>

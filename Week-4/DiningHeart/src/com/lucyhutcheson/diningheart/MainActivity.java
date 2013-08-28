@@ -10,6 +10,12 @@
  */
 package com.lucyhutcheson.diningheart;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -23,7 +29,6 @@ public class MainActivity extends Activity {
 	
 	ImageButton viewButton;
 	ImageButton addButton;
-
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,31 @@ public class MainActivity extends Activity {
 		viewButtonListener();
 		addButtonListener();
 		
+		//_diningPlaces = new ArrayList<HashMap<String, String>>();
+		JSONArray array = new JSONArray();
+		JSONObject object = new JSONObject();
+		JSONObject object2 = new JSONObject();
+		try {
+			object.put("name", "Chik-fil-A");
+			object.put("city", "Killeen");
+			object.put("category", "American");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		array.put(object);
+
+		try {
+			object2.put("name", "Cracker Barrel");
+			object2.put("city", "Harker Heights");
+			object2.put("category", "Country");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		array.put(object2);
+
+		FileFunctions.storeStringFile(getApplicationContext(), "dining", array.toString(), true);
 		
+
 
 	}
 
