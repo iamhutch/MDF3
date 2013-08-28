@@ -39,14 +39,12 @@ public class ViewActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		_context = this;
 
-		favList = getFavorites();
-		// _diningPlacesArray.addAll(favList.keySet());
+		_diningPlacesArray = getFavorites();
 
 		// ATTACH LIST ADAPTER
-		// _listView = (ListView) findViewById(R.id.listview);
-		// SimpleAdapter _myAdapter = new SimpleAdapter(_context,
-		// _diningPlacesArray, R.layout.view_row, FROM, TO);
-		// _listView.setAdapter(_myAdapter);
+		_listView = (ListView) findViewById(R.id.listview);
+		SimpleAdapter _myAdapter = new SimpleAdapter(_context, _diningPlacesArray, R.layout.view_row, FROM, TO);
+		_listView.setAdapter(_myAdapter);
 
 	}
 
@@ -75,29 +73,20 @@ public class ViewActivity extends Activity {
 	 * @return hashmap of our favorites data
 	 */
 	@SuppressWarnings("unchecked")
-	private HashMap<String, String> getFavorites() {
+	private ArrayList<HashMap<String, String>> getFavorites() {
 		Object stored = FileFunctions.readObjectFile(_context, "favorites",
 				false);
 		Log.i("FAVORITES", stored.toString());
 
-		HashMap<String, String> favorites = null;
+		ArrayList<HashMap<String, String>> favorites = null;
 
-		// CHECK IF OBJECT EXISTS
-		if (stored == null) {
-			Log.i("FAVORITES FILE", "NO FAVORITES FILE FOUND");
-			favorites = new HashMap<String, String>();
-		}
-		// IF OBJECT EXISTS, BRING IN DATA AND ADD TO HASHMAP
-		else {
-			Log.i("FAVORITES FOUND", "NOT NULL");
-			// CAST HASHMAP
-			try {
-				favorites = (HashMap<String, String>) stored;
-				Log.i("FAVORITES CAST", favorites.toString());
-			} catch (Exception e) {
-				Log.e("FAVORITES FOUND","ERROR");
-				e.printStackTrace();
-			}
+		// CAST ARRAYLIST
+		try {
+			favorites = (ArrayList<HashMap<String, String>>) stored;
+			Log.i("FAVORITES CAST", favorites.toString());
+		} catch (Exception e) {
+			Log.e("FAVORITES FOUND","ERROR");
+			e.printStackTrace();
 		}
 		return favorites;
 	}
