@@ -27,7 +27,13 @@ public class JSInterface extends HeartSingleton {
         mContext = c;
     }
 
-    /** Show a toast from the web page */
+    @JavascriptInterface
+    public void cancel() {
+		Log.i("JSINTERFACE", "CANCELLING");
+       ((AddActivity)mContext).finish();
+    }
+   
+    /** ADD DATA FROM WEBVIEW TO SINGLETON AND FILE STORAGE */
     @JavascriptInterface
     public void addHeart(String name, String city, String category) {
         Log.i("JSINTERFACE", "SUBMITED: " + name + ", " + city + ", " + category);
