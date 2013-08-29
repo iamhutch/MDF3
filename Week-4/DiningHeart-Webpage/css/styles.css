@@ -7,7 +7,7 @@ body {
 }
 #home {
 	margin: 0 auto;
-	width: 95%;
+	width: 90%;
 }
 .fieldcontain {
 	padding: 10px 20px;
@@ -21,7 +21,7 @@ input {
 	border-radius: 5px;
 	clear: both;
 	display: block;
-	width: 100%;
+	width: 90%;
 }
 .mainContent {
 	border-top: 1px solid #ccc;
@@ -41,7 +41,7 @@ input {
 	float: right;
 }
 select {
-	width: 100%;
+	width: 95%;
 	padding: 20px;
 	clear: both;
 	display: block;
