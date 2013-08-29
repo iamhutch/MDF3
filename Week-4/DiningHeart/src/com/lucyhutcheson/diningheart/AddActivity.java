@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class AddActivity extends Activity {
 	
@@ -27,11 +28,13 @@ public class AddActivity extends Activity {
 		setContentView(R.layout.activity_add);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		
+		final JSInterface jsInterface = new JSInterface(this);
 		WebView myWebView = (WebView) findViewById(R.id.addWebView);
+		myWebView.setWebViewClient(new WebViewClient());
 		WebSettings webSettings = myWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
-		myWebView.loadUrl("http://iamhutch.github.io/MDF3/Week-4/DiningHeart-Webpage/index.html");
+		myWebView.addJavascriptInterface(jsInterface, "Native");
+		myWebView.loadUrl("http://www.purelightdesigns.com/diningheart/index.html");
 
 	}
 
@@ -53,3 +56,5 @@ public class AddActivity extends Activity {
 		return true;
 	}
 }
+
+

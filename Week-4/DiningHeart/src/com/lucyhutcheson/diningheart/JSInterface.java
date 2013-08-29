@@ -1,6 +1,8 @@
 package com.lucyhutcheson.diningheart;
 
 import android.content.Context;
+import android.util.Log;
+import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 public class JSInterface {
@@ -12,8 +14,11 @@ public class JSInterface {
     }
 
     /** Show a toast from the web page */
+    @JavascriptInterface
     public void addHeart(String heart) {
         Toast.makeText(mContext, heart, Toast.LENGTH_SHORT).show();
+        Log.i("JSINTERFACE", "SUBMIT PRESSED");
     }
 }
+
 
