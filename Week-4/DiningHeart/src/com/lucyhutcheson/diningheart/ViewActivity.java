@@ -24,7 +24,7 @@ import android.widget.SimpleAdapter;
 
 public class ViewActivity extends Activity {
 
-	Context _context;
+	static Context _context;
 	private ListView _listView;
 	HashMap<String, String> _favorites;
 	HashMap<String, String> favList = new HashMap<String, String>();
@@ -73,7 +73,7 @@ public class ViewActivity extends Activity {
 	 * @return hashmap of our favorites data
 	 */
 	@SuppressWarnings("unchecked")
-	private ArrayList<HashMap<String, String>> getFavorites() {
+	public static ArrayList<HashMap<String, String>> getFavorites() {
 		Object stored = FileFunctions.readObjectFile(_context, "favorites",
 				false);
 		Log.i("FAVORITES", stored.toString());
