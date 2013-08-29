@@ -52,6 +52,8 @@ public class MainActivity extends Activity {
 		map.put("category", "Country");
 		_diningPlaces.add(map);
 		
+		Log.i("MAIN ACTIVITY", _diningPlaces.toString());
+		
 		FileFunctions.storeObjectFile(getApplicationContext(), "favorites", _diningPlaces, false);
 
 

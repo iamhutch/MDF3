@@ -15,9 +15,10 @@ public class JSInterface {
 
     /** Show a toast from the web page */
     @JavascriptInterface
-    public void addHeart(String heart) {
-        Toast.makeText(mContext, heart, Toast.LENGTH_SHORT).show();
-        Log.i("JSINTERFACE", "SUBMIT PRESSED");
+    public void addHeart(String name, String city, String category) {
+        Log.i("JSINTERFACE", "SUBMITED: " + name + ", " + city + ", " + category);
+
+        Toast.makeText(mContext, name, Toast.LENGTH_SHORT).show();
     }
 }
 
