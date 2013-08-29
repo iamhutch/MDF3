@@ -1,11 +1,11 @@
 /*
- * project		MovieLove
+ * project		DiningHeart
  * 
- * package		com.lucyhutcheson.lib
+ * package		com.lucyhutcheson.diningheart
  * 
  * @author		Lucy Hutcheson
  * 
- * date			Jul 11, 2013
+ * date			Aug 29, 2013
  * 
  */
 package com.lucyhutcheson.diningheart;

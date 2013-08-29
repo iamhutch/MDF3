@@ -35,7 +35,6 @@ public class AddActivity extends Activity {
 		webSettings.setJavaScriptEnabled(true);
 		myWebView.addJavascriptInterface(jsInterface, "Native");
 		myWebView.loadUrl("http://www.purelightdesigns.com/diningheart/index.html");
-
 	}
 
 	@Override

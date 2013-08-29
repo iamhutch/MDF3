@@ -1,3 +1,13 @@
+/*
+ * project		DiningHeart
+ * 
+ * package		com.lucyhutcheson.diningheart
+ * 
+ * @author		Lucy Hutcheson
+ * 
+ * date			Aug 29, 2013
+ * 
+ */
 package com.lucyhutcheson.diningheart;
 
 import java.util.ArrayList;
@@ -10,7 +20,7 @@ import android.widget.Toast;
 
 public class JSInterface extends HeartSingleton {
     Context mContext;
-	private ArrayList<HashMap<String, String>> _diningPlacesArray;
+	private ArrayList<HashMap<String, String>> _diningPlaces;
 
     /** Instantiate the interface and set the context */
     JSInterface(Context c) {
@@ -22,15 +32,22 @@ public class JSInterface extends HeartSingleton {
     public void addHeart(String name, String city, String category) {
         Log.i("JSINTERFACE", "SUBMITED: " + name + ", " + city + ", " + category);
         
-        HashMap<String, String> newHeart = null;
+        HashMap<String, String> newHeart = new HashMap<String, String>();
         newHeart.put("name", name);
         newHeart.put("city", city);
         newHeart.put("category", category);
-        HeartSingleton.getInstance().set_heart(newHeart);
-        
 		Log.i("JSINTERFACE", newHeart.toString());
-		
-        Toast.makeText(mContext, name, Toast.LENGTH_SHORT).show();
+
+		// Store data in singleton and file storage
+		HeartSingleton.getInstance().set_heart(newHeart);
+		_diningPlaces = new ArrayList<HashMap<String, String>>();
+		_diningPlaces.add(newHeart);
+		FileFunctions.storeObjectFile(mContext, "favorites", _diningPlaces, false);
+        
+        Toast.makeText(mContext, "New dining heart successfully added.", Toast.LENGTH_SHORT).show();
+
+        // Finish
+        ((AddActivity)mContext).finish();
     }
 }
 

@@ -10,9 +10,6 @@
  */
 package com.lucyhutcheson.diningheart;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -26,10 +23,6 @@ public class MainActivity extends Activity {
 	
 	ImageButton viewButton;
 	ImageButton addButton;
-	private HashMap<String, String> map;
-	private ArrayList<HashMap<String, String>> _diningPlaces;
-	
-
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,24 +31,6 @@ public class MainActivity extends Activity {
 
 		viewButtonListener();
 		addButtonListener();
-		
-		_diningPlaces = new ArrayList<HashMap<String, String>>();
-		map = new HashMap<String, String>();
-		map.put("name", "Chik-fil-A");
-		map.put("city", "Killeen");
-		map.put("category", "American");
-		_diningPlaces.add(map);
-
-		map = new HashMap<String, String>();
-		map.put("name", "Cracker Barrel");
-		map.put("city", "Harker Heights");
-		map.put("category", "Country");
-		_diningPlaces.add(map);
-		
-		Log.i("MAIN ACTIVITY", _diningPlaces.toString());
-		
-		FileFunctions.storeObjectFile(getApplicationContext(), "favorites", _diningPlaces, false);
-
 
 	}
 

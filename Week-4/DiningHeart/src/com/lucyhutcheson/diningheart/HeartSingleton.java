@@ -10,7 +10,9 @@
  */
 package com.lucyhutcheson.diningheart;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
 
 /**
  * Singleton to hold the searched-for movie JSON data as well as the latest movies
@@ -24,7 +26,7 @@ public class HeartSingleton {
 	// Will hold single instance of this class
 	private static HeartSingleton _instance = null;
 	// Will hold data for dining heart
-	private HashMap<String, String> _heart;
+	private ArrayList<HashMap<String, String>> _heartArrayList = new ArrayList<HashMap<String, String>>();
 	
 	
 	/**
@@ -58,8 +60,8 @@ public class HeartSingleton {
 	 * *************************.
 	 *
 	 */
-	public HashMap<String, String> get_heart(){
-		return _heart;
+	public ArrayList<HashMap<String, String>> get_heart(){
+		return _heartArrayList;
 	}
 	
 	/**
@@ -69,7 +71,7 @@ public class HeartSingleton {
 	 */
 
 	public void set_heart(HashMap<String, String> hashMap) {
-		this._heart = hashMap;
+		_heartArrayList.add(hashMap);
 	}
 	
 }

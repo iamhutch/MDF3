@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class ViewActivity extends Activity {
 
@@ -38,13 +39,21 @@ public class ViewActivity extends Activity {
 		setContentView(R.layout.activity_view);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		_context = this;
+		
+		try {
+			_diningPlacesArray = getFavorites();
+			
+			if (_diningPlacesArray != null) {
+				// ATTACH LIST ADAPTER
+				_listView = (ListView) findViewById(R.id.listview);
+				SimpleAdapter _myAdapter = new SimpleAdapter(_context, _diningPlacesArray, R.layout.view_row, FROM, TO);
+				_listView.setAdapter(_myAdapter);
+			}
+		} catch (Exception e) {
+			Log.e("VIEW ACTIVITY", "ERROR");
+	        Toast.makeText(_context, "No saved dining hearts.", Toast.LENGTH_SHORT).show();
+		}
 
-		_diningPlacesArray = getFavorites();
-
-		// ATTACH LIST ADAPTER
-		_listView = (ListView) findViewById(R.id.listview);
-		SimpleAdapter _myAdapter = new SimpleAdapter(_context, _diningPlacesArray, R.layout.view_row, FROM, TO);
-		_listView.setAdapter(_myAdapter);
 
 	}
 
@@ -74,20 +83,24 @@ public class ViewActivity extends Activity {
 	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<HashMap<String, String>> getFavorites() {
+		
+		/* 
+		 * GET STORED DATA FROM FAVORITES FILE
+		 */
 		Object stored = FileFunctions.readObjectFile(_context, "favorites",
 				false);
 		Log.i("FAVORITES", stored.toString());
-
 		ArrayList<HashMap<String, String>> favorites = null;
 
 		// CAST ARRAYLIST
 		try {
 			favorites = (ArrayList<HashMap<String, String>>) stored;
-			Log.i("FAVORITES CAST", favorites.toString());
+			Log.i("VIEW ACTIVITY", favorites.toString());
 		} catch (Exception e) {
 			Log.e("FAVORITES FOUND","ERROR");
 			e.printStackTrace();
 		}
+				
 		return favorites;
 	}
 
