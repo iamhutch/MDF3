@@ -54,7 +54,7 @@
 					</select>
 				</div>
 				<div id="submit-container" class="fieldcontain">
-					<input type="submit" id="submit" value="Add New Restaurant" />	
+					<input type="submit" id="submit" value="Add New Restaurant" onClick="submitHeart('Hello Android!')" />	
 				</div>
 				<span id="required"><span class="error">*</span> fields are required.</span>
 			</form>
@@ -64,6 +64,11 @@
 	
 	<!-- JavaScript under here -->
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript">
+	    function submitHeart(toast) {
+	        Native.addHeart(toast);
+	    }
+	</script>
 
 </body>
 </html>
