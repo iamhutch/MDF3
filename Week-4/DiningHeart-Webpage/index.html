@@ -20,10 +20,8 @@
 	
 	
 	<!-- StyleSheets under here -->
-	<link rel="stylesheet" href="css/styles.css" />	
+	<link rel="stylesheet" href="styles.css" />	
 	
-	<!-- JavaScript is normally at the end of the body, except for Modernizr which enables HTML5 elements & feature detects -->
-	<script src="js/libs/modernizr.custom.min.js"></script>
 
 </head>
 <body id="index">
@@ -35,7 +33,7 @@
 			<form action="#" method="post" id="addForm">
 				<div class="fieldcontain">
 					<label for="dining-name">Restaurant Name: <span class="required">*</span></label>
-					<input type="text" id="restaurant-name" placeholder="Your favorite restaurant"/>
+					<input type="text" id="name" placeholder="Your favorite restaurant"/>
 				</div>
 				<div class="fieldcontain">
 					<label for="city">City: <span class="required">*</span></label>
@@ -54,7 +52,8 @@
 					</select>
 				</div>
 				<div id="submit-container" class="fieldcontain">
-					<input type="submit" id="submit" value="Add New Restaurant" onClick="submitHeart('Hello Android!')" />	
+					<input type="button" id="submit" value="Add New Restaurant" onClick="validateForm()" />	
+					<input type="button" id="cancel-button" value="Cancel"  />	
 				</div>
 				<span id="required"><span class="error">*</span> fields are required.</span>
 			</form>
@@ -65,9 +64,59 @@
 	<!-- JavaScript under here -->
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript">
-	    function submitHeart(toast) {
-	        Native.addHeart(toast);
-	    }
+	
+		// VALIDATE FUNCTION
+		var validateForm = function() {
+			var getName = $("#name").val();
+			var getCity = $("#city").val();
+	
+			//Reset error messages
+			$(".error").hide();
+			var hasError = false;
+			$('#errors').empty();
+			$('#name').css("border", "none") ;
+			$('#city').css("border", "none") ;
+	
+			//Get Error messages
+			var messageArray = [];
+			
+			// Name validation
+			if(getName === ""){
+				$('#name').after('<span class="error">Please enter a restaurant name.</span>');
+				$('#name').css("border", "1px solid red") ;
+				hasError = true;
+			}
+			// City validation
+			if(getCity === ""){
+				$('#city').after('<span class="error">Please enter a city name.</span>');
+				$('#city').css("border", "1px solid red") ;
+				hasError = true;
+			}
+						
+			//Set Errors
+			if(hasError === true) {
+				$('#submit-container').after('<span class="error">Please correct the errors above.</span>');
+				event.preventDefault();
+				return false;
+			}else{
+				//If all is validated, save the data 
+				submitHeart(getName, getCity);
+			}
+		};
+		
+	    var submitHeart = function(name, city) {
+	    	var category = $("#category").val();
+	        Native.addHeart(name, city, category);
+	    };
+	    
+	    var cancel = function(cancel) {
+	        Native.cancel(cancel);
+	    };
+
+		$( "#cancel-button" ).click(function() {
+			alert( "Handler for .click() called." );
+		  	Native.cancel(cancel);
+		});	    
 	</script> 
 
 </body>
