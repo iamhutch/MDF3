@@ -27,11 +27,6 @@ public class JSInterface extends HeartSingleton {
         mContext = c;
     }
 
-    @JavascriptInterface
-    public void cancel() {
-		Log.i("JSINTERFACE", "CANCELLING");
-       ((AddActivity)mContext).finish();
-    }
    
     /** ADD DATA FROM WEBVIEW TO SINGLETON AND FILE STORAGE */
     @JavascriptInterface
@@ -55,6 +50,14 @@ public class JSInterface extends HeartSingleton {
         // Finish
         ((AddActivity)mContext).finish();
     }
+    
+    
+    @JavascriptInterface
+    public void cancel(String cancel) {
+		Log.i("JSINTERFACE", "CANCELLING");
+        ((AddActivity)mContext).finish();
+    }
+
 }
 
 
