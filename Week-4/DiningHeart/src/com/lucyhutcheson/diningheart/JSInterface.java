@@ -32,6 +32,18 @@ public class JSInterface extends HeartSingleton {
     @JavascriptInterface
     public void addHeart(String name, String city, String category) {
         Log.i("JSINTERFACE", "SUBMITED: " + name + ", " + city + ", " + category);
+		_diningPlaces = new ArrayList<HashMap<String, String>>();
+
+		/*
+		 * ADDED TO PULL SAVED DATA FIRST AND THEN ADD OUR NEW DATA
+		 * 
+		 */
+        try {
+    		_diningPlaces.addAll(ViewActivity.getFavorites());
+        } catch (Exception e) {
+        	Log.e("JSINTERFACE", "No saved data found.");
+        	e.printStackTrace();
+        }
         
         HashMap<String, String> newHeart = new HashMap<String, String>();
         newHeart.put("name", name);
@@ -41,7 +53,6 @@ public class JSInterface extends HeartSingleton {
 
 		// Store data in singleton and file storage
 		HeartSingleton.getInstance().set_heart(newHeart);
-		_diningPlaces = new ArrayList<HashMap<String, String>>();
 		_diningPlaces.add(newHeart);
 		FileFunctions.storeObjectFile(mContext, "favorites", _diningPlaces, false);
         
